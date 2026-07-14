@@ -7,6 +7,12 @@ Derived from [FideoJ/takopi](https://github.com/FideoJ/takopi) `feat/cursor-engi
 ## install
 
 ```sh
+uv pip install takopi-engine-cursor
+```
+
+or from GitHub:
+
+```sh
 uv pip install "takopi-engine-cursor @ git+https://github.com/RicardoKLee/takopi-engine-cursor.git"
 ```
 
