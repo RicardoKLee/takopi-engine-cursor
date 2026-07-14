@@ -1,33 +1,62 @@
 # Publishing to PyPI
 
-## Option A: one-time upload with API token (fastest)
+## Automatic releases (recommended)
 
-1. Create an API token at https://pypi.org/manage/account/token/
-2. Run:
+Push a tag that matches `pyproject.toml` version:
+
+```sh
+# edit pyproject.toml -> version = "0.2.1"
+git commit -am "chore: release v0.2.1"
+git tag v0.2.1
+git push origin master --tags
+```
+
+GitHub Actions (`publish.yml`) will:
+
+1. verify tag vs `pyproject.toml`
+2. run tests
+3. build wheel + sdist
+4. publish to PyPI via **Trusted Publishing**
+5. create a GitHub Release with artifacts
+
+### One-time setup
+
+Run once from this repo:
+
+```sh
+bash scripts/setup-trusted-publishing.sh
+```
+
+That creates the GitHub `pypi` environment on all three plugin repos.
+
+Then register **Trusted Publisher** on PyPI for each existing project:
+
+| PyPI project | Settings URL |
+|--------------|--------------|
+| `takopi-engine-cursor` | https://pypi.org/manage/project/takopi-engine-cursor/settings/publishing/ |
+| `takopi-engine-qoder` | https://pypi.org/manage/project/takopi-engine-qoder/settings/publishing/ |
+| `takopi-transport-feishu` | https://pypi.org/manage/project/takopi-transport-feishu/settings/publishing/ |
+
+For each project, click **Add a new publisher** → **GitHub Actions** and fill:
+
+| Field | Value |
+|-------|-------|
+| Owner | `RicardoKLee` |
+| Repository | same as PyPI project name |
+| Workflow name | `publish.yml` |
+| Environment name | `pypi` |
+
+Manual test without a tag:
+
+```sh
+gh workflow run publish.yml -R RicardoKLee/takopi-engine-cursor
+```
+
+## Manual upload (API token)
 
 ```sh
 export UV_PUBLISH_TOKEN='pypi-...'
 bash scripts/publish-all.sh
 ```
 
-## Option B: GitHub Actions trusted publishing (recommended for releases)
-
-For each plugin repo, add a **pending publisher** on PyPI:
-
-https://pypi.org/manage/account/publishing/
-
-| Field | Value |
-|-------|-------|
-| PyPI project name | `takopi-engine-cursor` (or qoder / feishu) |
-| Owner | `RicardoKLee` |
-| Repository | `takopi-engine-cursor` |
-| Workflow | `publish.yml` |
-| Environment | *(leave empty)* |
-
-Then trigger:
-
-```sh
-gh workflow run publish.yml -R RicardoKLee/takopi-engine-cursor
-```
-
-Or create a GitHub Release to publish automatically.
+Only use this for bootstrapping or emergencies. Prefer Trusted Publishing for CI.

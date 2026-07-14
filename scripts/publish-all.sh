@@ -6,7 +6,7 @@ if [[ -z "${UV_PUBLISH_TOKEN:-}" ]]; then
   exit 1
 fi
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 PACKAGES=(
   takopi-engine-cursor
   takopi-engine-qoder
