@@ -7,13 +7,13 @@ Derived from [FideoJ/takopi](https://github.com/FideoJ/takopi) `feat/cursor-engi
 ## install
 
 ```sh
-uv pip install takopi-engine-cursor
+uv pip install "takopi-engine-cursor @ git+https://github.com/RicardoKLee/takopi-engine-cursor.git"
 ```
 
 or from this checkout:
 
 ```sh
-uv pip install -e /path/to/takopi-engine-cursor
+uv pip install -e .
 ```
 
 ## usage
